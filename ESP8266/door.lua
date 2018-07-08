@@ -31,8 +31,10 @@ function pn532_send(dev_addr,data, len)
       c = i2c.read(id, len+2)
       i2c.stop(id)
    end)
-   
-    return encoder.toHex(c)
+   --print(encoder.toHex(c))
+   if(c ~= nil) then
+      return encoder.toHex(c)
+   end
 end
 function get_id()
    c = pn532_send(0x24, encoder.fromHex("0000FF04FCD44A0200E000"), 20)
@@ -40,11 +42,12 @@ function get_id()
 end
 
 sendid = function(T)
-   last_id = c
    c = get_id()
    if(c ~= "80808080") then
-      print(c)
-      --srv:send("ID--" .. c)
+      --print(c)
+      --do something
+      -- open the door
+      srv:send("ID*#" .. c .. "#*")
    end
 
    --- open the door
@@ -54,6 +57,7 @@ sendid = function(T)
    scancard:start()
 end
 
+--init pn532
 pn532_send(0x24,encoder.fromHex("0000FF05FBD4140114000300"), 8)
 
 scancard = tmr.create()
