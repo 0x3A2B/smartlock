@@ -1,6 +1,11 @@
 wifi.setmode(wifi.STATION)
-station_cfg={}
-station_cfg.ssid="905"
-station_cfg.pwd="905509905"
-station_cfg.save=true
-wifi.sta.config(station_cfg)
+station_cfg1={}
+station_cfg1.ssid="905"
+station_cfg1.pwd="905509905"
+station_cfg1.save=true
+wifi.sta.config(station_cfg1)
+station_cfg2={}
+station_cfg2.ssid="ASUS_5G_nomap"
+station_cfg2.pwd="mima123.."
+station_cfg2.save=true
+wifi.sta.config(station_cfg2)
