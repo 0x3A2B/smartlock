@@ -34,8 +34,8 @@ def main():
     print(name)
     try:
         cursor.execute('''CREATE TABLE %s(
-        in_time  TIMESTAMP, 
-        out_time TIME
+        time  TIME, 
+        date  DATE
         )''' %(name) )
     except:
         print("table error")

@@ -16,6 +16,9 @@ def get_host_ip():
         s.close()
     return ip
 
+def get_time():
+    return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) 
+
 def findid(id):
     c = cursor.execute('''SELECT * FROM Persons WHERE id=\'%s\' ''' % (id))
     data = c.fetchone()
@@ -38,13 +41,13 @@ while True:
     id = data[4:12]
     with findid(id) as name:
         if name :
+            timedate = get_time()
             server.sendto('Open', (client_addr, 9999))
             cursor.execute('''INSERT INTO %s (
-            
+            time , date
             ) 
-            VALUES(\'%s\'
-            )''' % (name))
-
+            VALUES(\'%s\', \'%s\'
+            )''' % (name, timedate[0:10], timedate[11:]))
     people.commit()
 server.close()
 cursor.close()
