@@ -53,6 +53,7 @@ wifi_disconnect_event = function(T)
   if disconnect_ct < total_tries then 
     print("Retrying connection...(attempt "..(disconnect_ct+1).." of "..total_tries..")")
   else
+    node.restart()
     wifi.sta.disconnect()
     print("Aborting connection to AP!")
     disconnect_ct = nil  
