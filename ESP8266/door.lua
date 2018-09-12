@@ -9,6 +9,12 @@ sck:on("receive", function(s, data, port, ip)
     end
 end)
 
+gpio.trig(intpin, "up",function(level, pulse2)
+    gpio.serout(5,gpio.HIGH,{9000,1000})
+    sck:send(9999, "172.16.2.156", "Out")
+    end
+)
+
 function pn532_send(dev_addr,data, len)
 
     i2c.start(id)

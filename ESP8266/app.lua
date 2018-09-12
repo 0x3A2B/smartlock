@@ -2,5 +2,15 @@
  sntp.sync(ntp_pool, nil, nil, 1)
  gpio.mode(5,  gpio.OUTPUT, gpio.PULLUP)
  gpio.write(5, gpio.LOW)
+ intpin = 6
+ gpio.mode(intpin, gpio.INT)
+
+
  dofile("i2c_init.lua")
  dofile("door.lua")
+-- dofile("int.lua")
+  tmr.softwd(300)
+  tmr.create():alarm(250000, tmr.ALARM_AUTO, function()
+     tmr.softwd(300)
+     print("reset sfwg")
+  end)

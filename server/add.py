@@ -9,16 +9,27 @@ cursor = people.cursor()
 def get_time():
     return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) 
 
+
+def findid(id):
+    c = cursor.execute("SELECT * FROM Persons WHERE id =\'%s\' " % (id))
+    data = c.fetchone()
+    if data == None:
+        return False
+    else:
+        return data
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", help="card's Id")
     parser.add_argument("-n", help="student's Name")
-    parser.add_argument("-c", help="student's code", type=int)
+    parser.add_argument("-c", help="student's Code", type=int)
+    parser.add_argument("-d", help="student's Deparment/class")
     args = parser.parse_args()
     id =  args.i
     name = args.n
     code = args.c
-    insert_data = get_time()
+    dep = args.d
     try:
         int(args.i , 16)
     except:
@@ -32,20 +43,15 @@ def main():
     print(id)
     print(code)
     print(name)
-    try:
-        cursor.execute('''CREATE TABLE %s(
-        time  TIME, 
-        date  DATE
-        )''' %(name) )
-    except:
-        print("table error")
-        exit()
-    cursor.execute('''INSERT INTO Persons (
-    id, name, code, insert_data
-    ) 
-    VALUES(\'%s\', \'%s\', %d, \'%s\'
-    )''' %(id, name, code, insert_data))
-    people.commit()
+    if findid(id):
+        print("Person exist")
+    else:
+        cursor.execute('''INSERT INTO Persons (
+        id, name, code, department, insert_data, insert_time
+        ) 
+        VALUES(\'%s\', \'%s\', %d, \'%s\', DATE(), TIME()	
+        )''' %(id, name, code, dep))
+        people.commit()
     cursor.close()
 
 if __name__ == "__main__":
