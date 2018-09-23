@@ -5,12 +5,12 @@ sck:listen(9999)
 -- open lock
 sck:on("receive", function(s, data, port, ip)
     if (data == "Open") then
-       gpio.serout(5,gpio.HIGH,{9000,1000})
+       gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
     end
 end)
 
-gpio.trig(intpin, "up",function(level, pulse2)
-    gpio.serout(5,gpio.HIGH,{9000,1000})
+gpio.trig(intpin, "down",function(level, pulse2)
+    gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
     sck:send(9999, "172.16.2.156", "Out")
     end
 )
@@ -58,7 +58,7 @@ sendid = function(T)
       sck:send(9999, "172.16.2.156", "ID*#" .. c .. "#*")
    end
    if(c == "bd470b9a") then
-      gpio.serout(5,gpio.HIGH,{9000,1000})
+      gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
    end
    if(c == "80808080") then
       -- print(c)
