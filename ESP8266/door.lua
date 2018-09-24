@@ -1,19 +1,10 @@
-print("Start door ctrl")
--- creat cinnection
-sck = net.createUDPSocket()
-sck:listen(9999)
--- open lock
-sck:on("receive", function(s, data, port, ip)
-    if (data == "Open") then
-       gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
-    end
+function open_door()
+   gpio.write(door_ctrl, gpio.HIGH)
+   tmr.create():alarm(100, tmr.ALARM_SINGLE, function()
+      gpio.write(door_ctrl, gpio.LOW)
 end)
+end
 
-gpio.trig(intpin, "down",function(level, pulse2)
-    gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
-    sck:send(9999, "172.16.2.156", "Out")
-    end
-)
 
 function pn532_send(dev_addr,data, len)
 
@@ -44,6 +35,7 @@ function pn532_send(dev_addr,data, len)
       return "99999999999999999999999999999999999999"
    end
 end
+
 function get_id()
    c = pn532_send(0x24, encoder.fromHex("0000FF04FCD44A0200E000"), 20)
    return string.sub(c, 29 , 36)
@@ -58,7 +50,8 @@ sendid = function(T)
       sck:send(9999, "172.16.2.156", "ID*#" .. c .. "#*")
    end
    if(c == "bd470b9a") then
-      gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
+      open_door()
+      --gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
    end
    if(c == "80808080") then
       -- print(c)
@@ -69,6 +62,28 @@ sendid = function(T)
    end
    scancard:start()
 end
+
+
+print("Start door ctrl")
+-- creat cinnection
+sck = net.createUDPSocket()
+sck:listen(9999)
+-- open lock
+sck:on("receive", function(s, data, port, ip)
+    if (data == "Open") then
+       open_door()
+       -- gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
+    end
+end)
+
+gpio.trig(intpin, "down",function(level, pulse2)
+    open_door()
+    --gpio.serout(door_ctrl,gpio.HIGH,{9000,1000})
+    sck:send(9999, "172.16.2.156", "Out")
+    end
+)
+
+
 
 -- init pn532
 pn532_send(0x24,encoder.fromHex("0000FF05FBD4140114000300"), 8)

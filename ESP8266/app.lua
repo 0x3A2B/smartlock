@@ -1,10 +1,10 @@
  ntp_pool = {"120.25.108.11","202.112.31.197", "202.112.29.82", "182.92.12.11", "203.107.6.88","120.25.115.20"}
  sntp.sync(ntp_pool, nil, nil, 1)
- door_ctrl = 3
- gpio.mode(door_ctrl,  gpio.OUTPUT, gpio.PULLUP)
+ door_ctrl = 0
+ gpio.mode(door_ctrl,  gpio.OUTPUT)
  gpio.write(door_ctrl, gpio.LOW)
  intpin = 5
- gpio.mode(intpin, gpio.INT)
+ gpio.mode(intpin, gpio.INT, gpio.FLOAT)
 
 
  dofile("i2c_init.lua")
